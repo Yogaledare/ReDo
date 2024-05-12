@@ -1,11 +1,19 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
+import useAuthStore from "./stores/useAuthStore.js";
+import LogoutButtonComponent from "./components/LogoutButtonComponent.jsx";
+import LoginComponent from "./components/LoginComponent.jsx";
+
 
 function App() {
-    const [count, setCount] = useState(0);
+    // const [token, setToken] = useState(''); 
+    // const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
+    // const { token, isAuthenticated, login, logout} = useAuthStore();     
+    
+    const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+    
     const [members, setMembers] = useState([]);
     const [member, setMember] = useState({});
 
@@ -29,23 +37,18 @@ function App() {
 
     return (
         <>
-            <div>
-                funkar
-            </div>
             <h1>Vite + React</h1>
             <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.jsx</code> and save to test HMR
-                </p>
-                <p>Members: {JSON.stringify(members)}</p>
-                <p>Member: {JSON.stringify(member)}</p>
+                {!isAuthenticated ? (
+                    <LoginComponent />
+                ) : (
+                    <>
+                        <LogoutButtonComponent />
+                        <p>Members: {JSON.stringify(members)}</p>
+                        <p>Member: {JSON.stringify(member)}</p>
+                    </>
+                )}
             </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
         </>
     )
 }
