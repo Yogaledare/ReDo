@@ -1,14 +1,26 @@
-﻿import {useState} from 'react';
-import UseAuthStore from '../stores/useAuthStore.js';
+﻿import {useEffect, useState} from 'react';
+import useAuthStore from '../stores/useAuthStore.js';
+import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const login = UseAuthStore((state) => state.login);
+    const login = useAuthStore((state) => state.login);
+    const loginError = useAuthStore((state) => state.loginError);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const navigate = useNavigate(); 
 
+    
+    useEffect(() => {
+        if (!loginError && isAuthenticated) {
+            navigate('/')
+        }
+    }, [loginError, isAuthenticated, navigate])
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         await login(email, password);
+        console.log(`outside, login error is: ${loginError}`);
     };
 
     return (
@@ -39,6 +51,7 @@ const LoginPage = () => {
                             placeholder="Password"
                         />
                     </div>
+                    {loginError && <div className={"alert alert-danger"}>{loginError}</div>}
                     <button type="submit" className="btn btn-primary">Log In</button>
                 </form>
             </div>

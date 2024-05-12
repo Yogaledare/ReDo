@@ -5,7 +5,7 @@ import useAuthStore from "../stores/useAuthStore.js";
 
 const HomePage = () => {
 
-    const {isAuthenticated, login, logout} = useAuthStore();
+    // const {isAuthenticated, login, logout} = useAuthStore();
     
     return (
         <>
