@@ -1,56 +1,42 @@
-import {useState, useEffect} from 'react';
-import axios from 'axios';
+import React, {useEffect} from 'react';
 import './App.css';
 import useAuthStore from "./stores/useAuthStore.js";
+import useMembersStore from "./stores/useMembersStore.js";
 import LogoutButtonComponent from "./components/LogoutButtonComponent.jsx";
 import LoginComponent from "./components/LoginComponent.jsx";
 
-
 function App() {
-    // const [token, setToken] = useState(''); 
-    // const [isAuthenticated, setIsAuthenticated] = useState(false);
-    
-    // const { token, isAuthenticated, login, logout} = useAuthStore();     
-    
-    const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-    
-    const [members, setMembers] = useState([]);
-    const [member, setMember] = useState({});
+    const {isAuthenticated, login, logout} = useAuthStore();
+    const {members, member, fetchMembers} = useMembersStore();
 
-    // Fetch all members
-    useEffect(() => {
-        axios.get('http://localhost:5002/members')
-            .then(response => {
-                setMembers(response.data);
-            })
-            .catch(error => console.error('There was an error!', error));
-    }, []);
+    // useEffect(() => {
+    //     const performFetch = async () => {
+    //         await fetchMembers();
+    //     }
+    //     performFetch();
+    // }, [isAuthenticated]);
 
-    // Fetch a single member
     useEffect(() => {
-        axios.get('http://localhost:5002/member')
-            .then(response => {
-                setMember(response.data);
-            })
-            .catch(error => console.error('There was an error!', error));
-    }, []);
+        fetchMembers();
+    }, [isAuthenticated]);
+
 
     return (
         <>
             <h1>Vite + React</h1>
             <div className="card">
                 {!isAuthenticated ? (
-                    <LoginComponent />
+                    <LoginComponent/>
                 ) : (
                     <>
-                        <LogoutButtonComponent />
+                        <LogoutButtonComponent/>
                         <p>Members: {JSON.stringify(members)}</p>
                         <p>Member: {JSON.stringify(member)}</p>
                     </>
                 )}
             </div>
         </>
-    )
+    );
 }
 
 export default App;
