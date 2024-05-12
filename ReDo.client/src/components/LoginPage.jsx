@@ -1,7 +1,7 @@
 ﻿import {useState} from 'react';
 import UseAuthStore from '../stores/useAuthStore.js';
 
-const LoginComponent = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const login = UseAuthStore((state) => state.login);
@@ -14,7 +14,7 @@ const LoginComponent = () => {
     return (
         <div className="row justify-content-center">
             <div className="col-md-6 col-lg-4">
-                <h2 className="mb-3">Login</h2>
+                <h1 className="mb-3">Login</h1>
                 <form onSubmit={handleSubmit}>
                     {/*<form onSubmit={handleSubmit}>*/}
                     <div className="mb-3">
@@ -46,4 +46,4 @@ const LoginComponent = () => {
     );
 };
 
-export default LoginComponent; 
+export default LoginPage; 

@@ -1,5 +1,5 @@
 ﻿// src/stores/useMembersStore.js
-import create from 'zustand';
+import { create } from 'zustand';
 import axios from 'axios';
 import useAuthStore from './useAuthStore.js'; // import the auth store to use its states
 
