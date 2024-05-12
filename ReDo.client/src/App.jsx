@@ -9,31 +9,29 @@ function App() {
     const {isAuthenticated, login, logout} = useAuthStore();
     const {members, member, fetchMembers} = useMembersStore();
 
-    // useEffect(() => {
-    //     const performFetch = async () => {
-    //         await fetchMembers();
-    //     }
-    //     performFetch();
-    // }, [isAuthenticated]);
-
     useEffect(() => {
         fetchMembers();
     }, [isAuthenticated]);
 
-
     return (
         <>
-            <h1>Vite + React</h1>
-            <div className="card">
-                {!isAuthenticated ? (
-                    <LoginComponent/>
-                ) : (
-                    <>
-                        <LogoutButtonComponent/>
-                        <p>Members: {JSON.stringify(members)}</p>
-                        <p>Member: {JSON.stringify(member)}</p>
-                    </>
-                )}
+            <div className="container mt-5 ">
+                <div className="row justify-content-center">
+                    <div className="col-12 text-center">
+
+
+                        <h1 className="mb-5">ReDo</h1>
+                    </div>
+                    {!isAuthenticated ? (
+                        <LoginComponent/>
+                    ) : (
+                        <>
+                            <LogoutButtonComponent/>
+                            <p>Members: {JSON.stringify(members)}</p>
+                            <p>Member: {JSON.stringify(member)}</p>
+                        </>
+                    )}
+                </div>
             </div>
         </>
     );
