@@ -37,4 +37,19 @@ public class ItemRepository : IItemRepository {
 
         return output;
     }
+
+    public async Task<bool> ToggleFinished(string userId, int itemId) {
+
+        var item = await _context.ItemEntities
+            .Where(i => i.UserEntityId == userId)
+            .FirstOrDefaultAsync(i => i.ReDoItemEntityId == itemId);
+
+        if (item == null) return false;
+
+        item.FinishedDateTime = item.FinishedDateTime.HasValue ? null : DateTime.Now;
+        _context.ItemEntities.Update(item);
+        await _context.SaveChangesAsync();
+        
+        return true; 
+    }
 }
