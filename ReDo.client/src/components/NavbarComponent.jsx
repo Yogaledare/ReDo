@@ -27,7 +27,7 @@ const LoggedOutMenu = () => {
 };
 
 const NavbarComponent = () => {
-    const { isAuthenticated } = useAuthStore();
+    const { token } = useAuthStore();
 
     return (
         <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -38,7 +38,7 @@ const NavbarComponent = () => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/">Home</Link>
                         </li>
-                        {isAuthenticated ? <LoggedInMenu /> : <LoggedOutMenu />}
+                        {token ? <LoggedInMenu /> : <LoggedOutMenu />}
                     </ul>
                 </div>
             </div>

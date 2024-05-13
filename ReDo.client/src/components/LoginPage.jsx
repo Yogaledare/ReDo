@@ -6,16 +6,17 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const login = useAuthStore((state) => state.login);
-    const loginError = useAuthStore((state) => state.loginError);
-    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const error = useAuthStore((state) => state.error);
+    const token = useAuthStore((state) => state.token);
+    // const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const navigate = useNavigate(); 
 
     
     useEffect(() => {
-        if (!loginError && isAuthenticated) {
+        if (!error && token) {
             navigate('/')
         }
-    }, [loginError, isAuthenticated, navigate])
+    }, [error, token, navigate])
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -50,7 +51,7 @@ const LoginPage = () => {
                             placeholder="Password"
                         />
                     </div>
-                    {loginError && <div className={"alert alert-danger"}>{loginError}</div>}
+                    {error && <div className={"alert alert-danger"}>{error}</div>}
                     <button type="submit" className="btn btn-primary">Log In</button>
                 </form>
             </div>
