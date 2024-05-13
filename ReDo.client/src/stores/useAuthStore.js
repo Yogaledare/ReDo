@@ -9,7 +9,7 @@ const api = axios.create({
 const useAuthStore = create((set, get) => ({
     token: null,
     isAuthenticated: false,
-    user: null,
+    // user: null,
     loginError: '',
 
     login: async (email, password) => {
