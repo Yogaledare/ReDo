@@ -10,12 +10,12 @@ import LoginPage from "./components/LoginPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
-    const {isAuthenticated, login, logout} = useAuthStore();
+    const {token, login, logout} = useAuthStore();
     const {members, member, fetchMembers} = useMembersStore();
 
     useEffect(() => {
         fetchMembers();
-    }, [isAuthenticated]);
+    }, [token]);
 
     return (<>
             <Router>
@@ -27,12 +27,22 @@ function App() {
                     <Routes>
                         <Route path={"/"} element={<HomePage></HomePage>}></Route>
                         <Route path={"/items"} element={
-                            <ProtectedRoute>
+                            <ProtectedRoute
+                                condition={!!token}
+                            >
                                 <ItemsPage></ItemsPage>
                             </ProtectedRoute>
                         }>
                         </Route>
-                        <Route path={"/login"} element={<LoginPage></LoginPage>}></Route>
+                        <Route path={"/login"} element={
+                            <ProtectedRoute
+                                condition={!token}
+                            >
+                                <LoginPage></LoginPage>
+                            </ProtectedRoute>
+                        }>
+                        </Route>
+                        {/*<Route path={"/login"} element={<LoginPage></LoginPage>}></Route>*/}
 
                         
 

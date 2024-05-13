@@ -2,11 +2,12 @@
 import {Navigate} from "react-router-dom";
 
 
-const ProtectedRoute = ({children}) => {
+const ProtectedRoute = ({children, condition}) => {
 
-    const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+    // const token = useAuthStore(state => state.token);
 
-    if (!isAuthenticated) {
+
+    if (!condition) {
         return <Navigate to="/"/>;
     }
 
