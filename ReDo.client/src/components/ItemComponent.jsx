@@ -1,11 +1,10 @@
-﻿// import 'bootstrap-icons/font/bootstrap-icons.css'
-import React from "react";
-import useReDoItemsStore from "../stores/useItemsStore.js";
+﻿import React from "react";
+// import useReDoItemsStore from "../stores/useItemsStore.js";
 
 
 export const ItemComponent = ({item}) => {
 
-    const toggleItemFinished = useReDoItemsStore(state => state.toggleItemFinished);
+    // const toggleItemFinished = useReDoItemsStore(state => state.toggleItemFinished);
 
     return (
         <>
@@ -18,9 +17,9 @@ export const ItemComponent = ({item}) => {
                     <div>
                         {item.description}
                     </div>
-
+            
                     <div>
-
+            
                         <button
                             className={"btn btn-primary"}
                             onClick={() => toggleItemFinished(item.reDoItemEntityId)}

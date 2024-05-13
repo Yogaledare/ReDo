@@ -3,13 +3,13 @@ import useReDoItemsStore from '../stores/useItemsStore';
 import {ItemComponent} from "./ItemComponent.jsx";
 
 const ItemsPage = () => {
-    const {items, fetchItems, loading, error} = useReDoItemsStore();
+    const {items, fetchItems, error} = useReDoItemsStore();
 
     useEffect(() => {
         fetchItems();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
+    // if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (
@@ -32,28 +32,3 @@ const ItemsPage = () => {
 
 export default ItemsPage;
 
-
-//
-//
-//     const { redoItems, fetchItems, loading, error } = useReDoItemsStore();
-//
-//     useEffect(() => {
-//         fetchItems();
-//     }, [fetchItems]);
-//
-//     if (loading) return <div>Loading...</div>;
-//     if (error) return <div>Error: {error}</div>;
-//
-//     return (
-//         <div>
-//             <h1>ReDo Items</h1>
-//             <ul>
-//                 {redoItems.map(item => (
-//                     <li key={item.ReDoItemEntityId}>
-//                         {item.Description} - {item.IsFinished ? 'Done' : 'Pending'}
-//                     </li>
-//                 ))}
-//             </ul>
-//         </div>
-//     );
-// };
