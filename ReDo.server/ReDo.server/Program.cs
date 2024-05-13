@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ReDo.server.Data;
 using ReDo.server.Endpoints;
+using ReDo.server.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

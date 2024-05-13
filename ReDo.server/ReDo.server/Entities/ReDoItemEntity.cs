@@ -1,4 +1,4 @@
-﻿namespace ReDo.server.Data;
+﻿namespace ReDo.server.Entities;
 
 public class ReDoItemEntity
 {
@@ -10,7 +10,7 @@ public class ReDoItemEntity
 
     public bool IsFinished => FinishedDateTime.HasValue;
 
-    // public int UserEntityId { get; set; }
+    public string UserEntityId { get; set; }
     public UserEntity? UserEntity { get; set; }
 }
 
