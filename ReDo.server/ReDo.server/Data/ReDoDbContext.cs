@@ -9,6 +9,6 @@ public class ReDoDbContext : IdentityDbContext<UserEntity> {
     }
 
     public DbSet<UserEntity> UserEntities { get; set; }
-    public DbSet<ReDoItemEntity> RedoItemEntities { get; set; }
+    public DbSet<ReDoItemEntity> ItemEntities { get; set; }
 }
 

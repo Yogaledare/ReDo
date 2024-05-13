@@ -20,7 +20,6 @@ const LoginPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         await login(email, password);
-        console.log(`outside, login error is: ${loginError}`);
     };
 
     return (

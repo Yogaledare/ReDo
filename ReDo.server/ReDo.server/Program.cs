@@ -21,6 +21,8 @@ builder.Services.AddCors(options => {
     });
 });
 
+builder.Services.AddScoped<IItemRepository, ItemRepository>(); 
+
 builder.Services.AddDbContext<ReDoDbContext>(options => {
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
         );
@@ -51,6 +53,7 @@ app.UseHttpsRedirection();
 // app.UseAuthorization();
 
 app.MapMemberEndpoints();
+app.MapItemEndpoints();
 
 
 
