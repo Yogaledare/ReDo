@@ -2,18 +2,18 @@
 import useItemsStore from "../stores/useItemsStore.js";
 
 
-export const ItemComponent = ({item}) => {
+export const ItemComponent = ({item: {reDoItemEntityId, isFinished, description}}) => {
 
     const toggleItemFinished = useItemsStore(state => state.toggleItemFinished);
     const removeItem = useItemsStore(state => state.removeItem);
 
-    const handleToggle = () => {
+    const handleToggle = async () => {
         console.log("toggled")
-        toggleItemFinished(item.reDoItemEntityId);
+        await toggleItemFinished(reDoItemEntityId);
     };
 
-    const handleRemove = () => {
-        removeItem(item.reDoItemEntityId);
+    const handleRemove = async () => {
+        await removeItem(reDoItemEntityId);
     };
 
 
@@ -26,10 +26,10 @@ export const ItemComponent = ({item}) => {
                     <input 
                         className={"form-check-input me-2"} 
                         type="checkbox"
-                        checked={item.isFinished}
+                        checked={isFinished}
                         onChange={handleToggle}
                     />
-                    {item.description}
+                    {description}
                 </div>
 
                 <button className="btn btn-outline-danger btn-sm" onClick={handleRemove}>

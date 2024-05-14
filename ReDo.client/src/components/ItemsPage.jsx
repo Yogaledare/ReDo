@@ -7,7 +7,10 @@ const ItemsPage = () => {
     const {items, fetchItems, error} = useItemsStore();
 
     useEffect(() => {
-        fetchItems();
+        const fetchData = async () => {
+            await fetchItems();
+        }
+        fetchData(); 
     }, []);
 
     // if (loading) return <div>Loading...</div>;
@@ -22,10 +25,10 @@ const ItemsPage = () => {
                     <AddItemForm></AddItemForm>
                     <ol className={"list-group my-3"}>
                         {items.map(item => (
-                            <ItemComponent 
+                            <ItemComponent
                                 key={item.reDoItemEntityId}
                                 item={item}
-                           ></ItemComponent>
+                            ></ItemComponent>
                         ))}
                     </ol>
                 </div>
