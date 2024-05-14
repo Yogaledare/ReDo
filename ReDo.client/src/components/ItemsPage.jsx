@@ -1,10 +1,10 @@
 ﻿import React, {useEffect} from 'react';
-import useReDoItemsStore from '../stores/useItemsStore';
+import useItemsStore from '../stores/useItemsStore';
 import {ItemComponent} from "./ItemComponent.jsx";
 import AddItemForm from "./AddItemForm.jsx";
 
 const ItemsPage = () => {
-    const {items, fetchItems, error} = useReDoItemsStore();
+    const {items, fetchItems, error} = useItemsStore();
 
     useEffect(() => {
         fetchItems();
@@ -20,11 +20,14 @@ const ItemsPage = () => {
                 <div className="col-8">
                     <h1>Items</h1>
                     <AddItemForm></AddItemForm>
-                    <div className={"list-group my-3"}>
+                    <ol className={"list-group my-3"}>
                         {items.map(item => (
-                            <ItemComponent item={item}></ItemComponent>
+                            <ItemComponent 
+                                key={item.reDoItemEntityId}
+                                item={item}
+                           ></ItemComponent>
                         ))}
-                    </div>
+                    </ol>
                 </div>
             </div>
         </>

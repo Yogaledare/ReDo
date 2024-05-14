@@ -1,4 +1,5 @@
 .list-group-item:hover {
     cursor: pointer;
-    background-color: #f8f9fa; /* Slight gray background on hover */
+    background-color: #cbd9d1; /* Slight gray background on hover */
+    /*border: chocolate;*/
 }

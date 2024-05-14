@@ -19,13 +19,15 @@ const AddItemForm = () => {
     return (
 
         <>
-            
+
             <form onSubmit={handleSubmit}>
                 <div className={"d-flex my-4"}>
-                    <input 
-                        className={"form-control"} 
+                    <input
+                        className={"form-control"}
                         type="text"
                         placeholder={"Add a new item"}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                     />
                     <button type={"submit"} className={"btn btn-primary ms-3"}>Create</button>
                 </div>
@@ -36,8 +38,8 @@ const AddItemForm = () => {
         </>
 
 
-)
-    ;
+    )
+        ;
 
 
 }

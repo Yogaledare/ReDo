@@ -8,7 +8,9 @@ const useItemsStore = create(set => ({
     
     fetchItems: async () => {
         try {
-            const response = await loggedInApi.get('items'); 
+            console.log("inside get")
+            const response = await loggedInApi.get('items');
+            console.log("after get")
             set({items: response.data})
         } catch (error) {
             console.error('Error fetching items:', error.message || 'Failed to fetch items.');
@@ -32,10 +34,10 @@ const useItemsStore = create(set => ({
     addItem: async (description) => {
         try {
             const newItem = await loggedInApi.post('items', { description: description });
-            set(state => ({ items: [...state.items, newItem] }));
+            set(state => ({ items: [...state.items, newItem.data] }));
         } catch (error) {
-            console.error('Error adding new item:', error.message || 'Failed to add new item.');
-            set({ error: error.message || 'Failed to add new item.' });
+            console.error('Error adding new item:', error.data.message || 'Failed to add new item.');
+            set({ error: error.data.message || 'Failed to add new item.' });
         }
     }
     
