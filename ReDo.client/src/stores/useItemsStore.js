@@ -2,32 +2,37 @@
 import loggedInApi from "../api/loggedInApi.js";
 
 
+const handleStoreError = (set, error, defaultErrorMessage) => {
+    const errorMessage = error?.data?.message ?? defaultErrorMessage; 
+    console.error(errorMessage); 
+    set({error: errorMessage})
+}
+
+
 const useItemsStore = create(set => ({
     items: [],
     error: null,
 
     fetchItems: async () => {
         try {
-            console.log("inside get")
             const response = await loggedInApi.get('items');
-            console.log("after get")
             set({items: response.data})
         } catch (error) {
-            console.error('Error fetching items:', error.message || 'Failed to fetch items.');
-            set({error: error.message || 'Failed to fetch items.'});
+            handleStoreError(set, error, 'Failed to fetch items.'); 
         }
     },
 
     toggleItemFinished: async (itemId) => {
         try {
             await loggedInApi.put(`items/toggle-finish/${itemId}`);
-            set((state) => ({
-                items: state.items.map(item =>
-                    item.reDoItemEntityId === itemId ? {...item, isFinished: !item.isFinished} : item)
+            set(state => ({
+                items: state.items.map(item => ({
+                    ...item,
+                    isFinished: item?.reDoItemEntityId === itemId ? !item.isFinished : item.isFinished
+                }))
             }));
         } catch (error) {
-            console.error('Error toggling item finished state:', error.message || 'Failed to toggle item.');
-            set({error: error.message || 'Failed to toggle item finished state.'});
+            handleStoreError(set, error, 'Failed to toggle item.');
         }
     },
 
@@ -36,8 +41,7 @@ const useItemsStore = create(set => ({
             const newItem = await loggedInApi.post('items', {description: description});
             set(state => ({items: [...state.items, newItem.data]}));
         } catch (error) {
-            console.error('Error adding new item:', error.data.message || 'Failed to add new item.');
-            set({error: error.data.message || 'Failed to add new item.'});
+            handleStoreError(set, error, 'Failed to add new item.');
         }
     },
 
@@ -48,8 +52,7 @@ const useItemsStore = create(set => ({
                 items: state.items.filter(item => item.reDoItemEntityId !== itemId)
             }));
         } catch (error) {
-            console.error('Error removing item:', error.data.message || 'Failed to remove item.');
-            set({error: error.data.message || 'Failed to removing item.'});
+            handleStoreError(set, error, 'Failed to remove item.');
         }
     }
 
