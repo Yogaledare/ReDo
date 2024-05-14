@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LanguageExt;
+using LanguageExt.Common;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ReDo.server.DTOs;
 using ReDo.server.Entities;
 
@@ -29,13 +32,7 @@ public class ItemRepository : IItemRepository {
                 i.FinishedDateTime,
                 i.IsFinished
             ));
-            // .ToListAsync();
-
         
-        // foreach (var reDoItemDto in output) {
-            // Console.WriteLine(reDoItemDto);
-        // }
-
         return output;
     }
 
@@ -68,5 +65,32 @@ public class ItemRepository : IItemRepository {
             newItem.FinishedDateTime, newItem.IsFinished); 
 
         return newItemDto; 
+    }
+
+
+    public async Task<Result<ReDoItemDto>> DeleteItem(string userId, int itemId) {
+        var items = await _context.ItemEntities
+            .Where(i => i.UserEntityId == userId)
+            .ToListAsync();
+        
+        if (items.IsNullOrEmpty()) {
+            var error = new ArgumentException($"No items for userId {userId}");
+            return new Result<ReDoItemDto>(error); 
+        }
+
+        var item = items.FirstOrDefault(i => i.ReDoItemEntityId == itemId);
+
+        if (item.IsNull()) {
+            var error = new ArgumentException($"Cannot find itemId {itemId} owned by userId {userId}");
+            return new Result<ReDoItemDto>(error); 
+        }
+
+        _context.ItemEntities.Remove(item!);
+        await _context.SaveChangesAsync();
+
+        var itemDto = new ReDoItemDto(item.ReDoItemEntityId, item.Description, item.AddedDateTime, item.FinishedDateTime,
+            item.IsFinished); 
+        
+        return itemDto; 
     }
 }

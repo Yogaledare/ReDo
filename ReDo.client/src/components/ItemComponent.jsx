@@ -5,6 +5,7 @@ import useItemsStore from "../stores/useItemsStore.js";
 export const ItemComponent = ({item}) => {
 
     const toggleItemFinished = useItemsStore(state => state.toggleItemFinished);
+    const removeItem = useItemsStore(state => state.removeItem);
 
     const handleToggle = () => {
         console.log("toggled")
@@ -12,7 +13,7 @@ export const ItemComponent = ({item}) => {
     };
 
     const handleRemove = () => {
-        // removeItem(item.reDoItemEntityId);
+        removeItem(item.reDoItemEntityId);
     };
 
 

@@ -1,4 +1,6 @@
 ﻿using System.Security.Claims;
+using LanguageExt.Common;
+using Microsoft.AspNetCore.Mvc;
 using ReDo.server.Data;
 using ReDo.server.DTOs;
 
@@ -67,6 +69,29 @@ public static class ItemEndpoints {
                 }
             })
             .RequireAuthorization()
-            .WithOpenApi(); 
+            .WithOpenApi();
+
+        app.MapDelete("/items/{id}", async (
+                int id,
+                IItemRepository repository,
+                ClaimsPrincipal user
+            ) => {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null) {
+                    return Results.BadRequest("User ID not found.");
+                }
+
+                var result = await repository.DeleteItem(userId, id);
+
+                return result.Match(
+                    Succ: item => {
+                        return Results.Ok(item);
+                    },
+                    Fail: ex => Results.Problem(ex.Message));
+            })
+            .RequireAuthorization()
+            .WithOpenApi()
+            ;
     }
 }
