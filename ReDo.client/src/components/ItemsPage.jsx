@@ -18,11 +18,11 @@ const ItemsPage = () => {
             <div className="row justify-content-center my-3">
                 <div className="col-8">
                     <h1>Items</h1>
-                    <ul className={"list-group my-3"}>
+                    <div className={"list-group my-3"}>
                         {items.map(item => (
                             <ItemComponent item={item}></ItemComponent>
                         ))}
-                    </ul>
+                    </div>
                 </div>
             </div>
         </>

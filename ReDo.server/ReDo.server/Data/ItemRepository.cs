@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReDo.server.DTOs;
+using ReDo.server.Entities;
 
 namespace ReDo.server.Data;
 
@@ -51,5 +52,18 @@ public class ItemRepository : IItemRepository {
         await _context.SaveChangesAsync();
         
         return true; 
+    }
+
+    public async Task<ReDoItemEntity> AddItem(string userId, CreateReDoItemDto itemDto) {
+        var newItem = new ReDoItemEntity {
+            Description = itemDto.Description,
+            AddedDateTime = DateTime.Now,
+            UserEntityId = userId
+        };
+
+        _context.ItemEntities.Add(newItem);
+        await _context.SaveChangesAsync();
+
+        return newItem; 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using ReDo.server.Data;
+using ReDo.server.DTOs;
 
 namespace ReDo.server.Endpoints;
 
@@ -44,5 +45,28 @@ public static class ItemEndpoints {
             })
             .RequireAuthorization()
             .WithOpenApi();
+
+
+        app.MapPost("/items", async (
+                CreateReDoItemDto itemDto,
+                IItemRepository repository,
+                ClaimsPrincipal user
+            ) => {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null) {
+                    return Results.BadRequest("User ID not found.");
+                }
+
+                try {
+                    var newItem = await repository.AddItem(userId, itemDto);
+                    return Results.Created($"/items/{newItem.ReDoItemEntityId}", newItem);
+                }
+                catch (Exception ex) {
+                    return Results.Problem(ex.Message);
+                }
+            })
+            .RequireAuthorization()
+            .WithOpenApi(); 
     }
 }
