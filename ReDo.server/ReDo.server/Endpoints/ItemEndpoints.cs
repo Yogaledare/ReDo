@@ -59,8 +59,8 @@ public static class ItemEndpoints {
                 }
 
                 try {
-                    var newItem = await repository.AddItem(userId, itemDto);
-                    return Results.Created($"/items/{newItem.ReDoItemEntityId}", newItem);
+                    var newItemDto = await repository.AddItem(userId, itemDto);
+                    return Results.Created($"/items/{newItemDto.ReDoItemEntityId}", newItemDto);
                 }
                 catch (Exception ex) {
                     return Results.Problem(ex.Message);

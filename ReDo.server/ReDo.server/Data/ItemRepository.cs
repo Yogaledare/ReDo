@@ -54,7 +54,7 @@ public class ItemRepository : IItemRepository {
         return true; 
     }
 
-    public async Task<ReDoItemEntity> AddItem(string userId, CreateReDoItemDto itemDto) {
+    public async Task<ReDoItemDto> AddItem(string userId, CreateReDoItemDto itemDto) {
         var newItem = new ReDoItemEntity {
             Description = itemDto.Description,
             AddedDateTime = DateTime.Now,
@@ -63,7 +63,10 @@ public class ItemRepository : IItemRepository {
 
         _context.ItemEntities.Add(newItem);
         await _context.SaveChangesAsync();
+        
+        var newItemDto = new ReDoItemDto(newItem.ReDoItemEntityId, newItem.Description, newItem.AddedDateTime,
+            newItem.FinishedDateTime, newItem.IsFinished); 
 
-        return newItem; 
+        return newItemDto; 
     }
 }

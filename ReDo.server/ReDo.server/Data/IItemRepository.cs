@@ -7,7 +7,7 @@ public interface IItemRepository {
     Task<IEnumerable<ReDoItemDto>> GetAllItemsForUser(string userId);
 
     Task<bool> ToggleFinished(string userId, int itemId);
-    Task<ReDoItemEntity> AddItem(string userId, CreateReDoItemDto itemDto);
+    Task<ReDoItemDto> AddItem(string userId, CreateReDoItemDto itemDto);
     
 
 }
