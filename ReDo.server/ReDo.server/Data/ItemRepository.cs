@@ -14,24 +14,18 @@ public class ItemRepository : IItemRepository {
         _context = context;
     }
 
+    private static ReDoItemDto ConvertEntityToDto(ReDoItemEntity entity) {
+        return new ReDoItemDto(entity.ReDoItemEntityId, entity.Description, entity.AddedDateTime, entity.FinishedDateTime,
+            entity.IsFinished); 
+    }
+
     public async Task<IEnumerable<ReDoItemDto>> GetAllItemsForUser(string userId) {
-        Console.WriteLine("inside getALlitemsforUsEr------------------");
-        
         var itemEntities = await _context.ItemEntities
             .ToListAsync(); 
-            
-        Console.WriteLine($"count: {itemEntities.Count}");
-
 
         var output = itemEntities
             .Where(i => i.UserEntityId == userId)
-            .Select(i => new ReDoItemDto(
-                i.ReDoItemEntityId,
-                i.Description,
-                i.AddedDateTime,
-                i.FinishedDateTime,
-                i.IsFinished
-            ));
+            .Select(i => ConvertEntityToDto(i));
         
         return output;
     }
@@ -88,9 +82,49 @@ public class ItemRepository : IItemRepository {
         _context.ItemEntities.Remove(item!);
         await _context.SaveChangesAsync();
 
-        var itemDto = new ReDoItemDto(item.ReDoItemEntityId, item.Description, item.AddedDateTime, item.FinishedDateTime,
-            item.IsFinished); 
+        var itemDto = ConvertEntityToDto(item!); 
         
         return itemDto; 
+    }
+
+
+    public async Task<Result<ReDoItemDto>> DeleteLastAddedItem(string userId) {
+        var items = await _context.ItemEntities
+            .Where(i => i.UserEntityId == userId)
+            .ToListAsync();
+        
+        if (items.IsNullOrEmpty()) {
+            var error = new ArgumentException($"No items for userId {userId}");
+            return new Result<ReDoItemDto>(error); 
+        }
+
+        var lastAddedItem = items.Last();
+
+        _context.ItemEntities.Remove(lastAddedItem);
+        await _context.SaveChangesAsync(); 
+        
+        var itemDto = ConvertEntityToDto(lastAddedItem!); 
+        
+        return itemDto; 
+    }
+    
+    
+    public async Task<Result<IEnumerable<ReDoItemDto>>> DeleteAllItems(string userId) {
+        var items = await _context.ItemEntities
+            .Where(i => i.UserEntityId == userId)
+            .ToListAsync();
+        
+        if (items.IsNullOrEmpty()) {
+            var error = new ArgumentException($"No items for userId {userId}");
+            return new Result<IEnumerable<ReDoItemDto>>(error); 
+        }
+
+        _context.ItemEntities.RemoveRange(items);
+        await _context.SaveChangesAsync();
+
+        var itemDtos = items.Select(i => ConvertEntityToDto(i))
+            .ToList();  
+        
+        return itemDtos; 
     }
 }
