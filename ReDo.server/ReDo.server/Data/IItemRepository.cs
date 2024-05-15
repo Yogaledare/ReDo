@@ -11,5 +11,8 @@ public interface IItemRepository {
     Task<ReDoItemDto> AddItem(string userId, CreateReDoItemDto itemDto);
 
     Task<Result<ReDoItemDto>> DeleteItem(string userId, int itemId);
+    Task<Result<ReDoItemDto>> DeleteLastAddedItem(string userId);
+    Task<Result<IEnumerable<ReDoItemDto>>> DeleteAllItems(string userId); 
+    
 
 }

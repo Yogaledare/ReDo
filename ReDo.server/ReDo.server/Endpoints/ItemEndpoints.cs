@@ -93,5 +93,49 @@ public static class ItemEndpoints {
             .RequireAuthorization()
             .WithOpenApi()
             ;
+
+
+        app.MapDelete("/items/last", async (
+                IItemRepository repository,
+                ClaimsPrincipal user
+            ) => {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null) {
+                    return Results.BadRequest("User ID not found.");
+                }
+
+                var result = await repository.DeleteLastAddedItem(userId);
+
+                return result.Match(
+                    Succ: item => {
+                        return Results.Ok(item);
+                    },
+                    Fail: ex => Results.Problem(ex.Message));
+            })
+            .RequireAuthorization()
+            .WithOpenApi();
+
+
+        app.MapDelete("/items", async (
+                IItemRepository repository,
+                ClaimsPrincipal user
+            ) => {
+                var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (userId == null) {
+                    return Results.BadRequest("User ID not found.");
+                }
+
+                var result = await repository.DeleteAllItems(userId);
+
+                return result.Match(
+                    Succ: items => {
+                        return Results.Ok(items);
+                    },
+                    Fail: ex => Results.Problem(ex.Message));
+            })
+            .RequireAuthorization()
+            .WithOpenApi(); 
     }
 }
