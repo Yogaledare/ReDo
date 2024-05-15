@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
 using ReDo.server.Data;
@@ -52,12 +53,24 @@ public static class ItemEndpoints {
         app.MapPost("/items", async (
                 CreateReDoItemDto itemDto,
                 IItemRepository repository,
-                ClaimsPrincipal user
+                ClaimsPrincipal user,
+                IValidator<CreateReDoItemDto> validator
             ) => {
                 var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 if (userId == null) {
                     return Results.BadRequest("User ID not found.");
+                }
+
+                var validationResult = await validator.ValidateAsync(itemDto);
+
+                if (!validationResult.IsValid) {
+                    return Results.Problem(new ValidationProblemDetails {
+                        Status = StatusCodes.Status400BadRequest,
+                        Title = "Validation Error",
+                        Detail = "One or more server side validation errors",
+                        Errors = validationResult.ToDictionary(),
+                    });
                 }
 
                 try {
@@ -70,6 +83,7 @@ public static class ItemEndpoints {
             })
             .RequireAuthorization()
             .WithOpenApi();
+
 
         app.MapDelete("/items/{id}", async (
                 int id,
@@ -88,7 +102,7 @@ public static class ItemEndpoints {
                     Succ: item => {
                         return Results.Ok(item);
                     },
-                    Fail: ex => Results.Problem(ex.Message));
+                    Fail: ex => Results.Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest));
             })
             .RequireAuthorization()
             .WithOpenApi()
@@ -111,7 +125,7 @@ public static class ItemEndpoints {
                     Succ: item => {
                         return Results.Ok(item);
                     },
-                    Fail: ex => Results.Problem(ex.Message));
+                    Fail: ex => Results.Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest));
             })
             .RequireAuthorization()
             .WithOpenApi();
@@ -133,9 +147,9 @@ public static class ItemEndpoints {
                     Succ: items => {
                         return Results.Ok(items);
                     },
-                    Fail: ex => Results.Problem(ex.Message));
+                    Fail: ex => Results.Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest));
             })
             .RequireAuthorization()
-            .WithOpenApi(); 
+            .WithOpenApi();
     }
 }

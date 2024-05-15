@@ -15,7 +15,7 @@ const ItemsPage = () => {
     }, []);
 
     // if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+    // if (error) return <div>Error: {error}</div>;
 
     return (
 
@@ -23,6 +23,7 @@ const ItemsPage = () => {
             <div className="row justify-content-center my-3">
                 <div className="col-8">
                     <h1>Items</h1>
+                    {error && <div className={"alert alert-danger"}>{error}</div>}
                     <AddItemForm></AddItemForm>
                     <ol className={"list-group my-3"}>
                         {items.map(item => (

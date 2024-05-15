@@ -14,16 +14,26 @@ const createApiInstance = (config = {}) => {
         },
         error => {
             const status = error.response ? error.response.status : 0;
+            let customError = { ...error };
+
             switch (status) {
+                case 400:
+                    customError.message = "Bad Request.";
+                    break;
                 case 401:
-                    return Promise.reject({message: "You are not authorized.", details: error});
+                    customError.message = "You are not authorized.";
+                    break;
                 case 404:
-                    return Promise.reject({message: "Could not find URL.", details: error});
+                    customError.message = "Could not find URL.";
+                    break;
                 case 500:
-                    return Promise.reject({message: "Server error.", details: error});
+                    customError.message = "Server error.";
+                    break;
                 default:
-                    return Promise.reject({message: "Network or server error", details: error});
+                    customError.message = "Network or server error.";
+                    break;
             }
+            return Promise.reject(customError);
         }
     );
 

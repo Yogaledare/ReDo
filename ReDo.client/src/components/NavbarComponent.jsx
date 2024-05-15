@@ -7,7 +7,7 @@ const LoggedInMenu = () => {
     return (
         <>
             <li className="nav-item">
-                <Link className="nav-link" to="/items">Todo Items</Link>
+                <Link className="nav-link" to="/items">ReDo Items</Link>
             </li>
             <li className="nav-item">
                 <button className="btn btn-link nav-link" style={{ textDecoration: 'none' }} onClick={logout}>Logout</button>

@@ -1,7 +1,10 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using ReDo.server.Data;
 using ReDo.server.Endpoints;
 using ReDo.server.Entities;
+using ReDo.server.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +36,9 @@ builder.Services.AddIdentityApiEndpoints<UserEntity>()
     .AddEntityFrameworkStores<ReDoDbContext>();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateReDoItemDtoValidator>(); 
 
 
 var app = builder.Build();

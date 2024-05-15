@@ -1,84 +1,78 @@
 ﻿import {create} from 'zustand';
 import loggedInApi from "../api/loggedInApi.js";
 
+const handleStoreError = (set, error) => {
+    // let errorMessage = defaultErrorMessage;
+    let errorMessage = '';
+    let validationErrors = {};
 
-const handleStoreError = (set, error, defaultErrorMessage) => {
-    const errorMessage = error?.data?.message ?? defaultErrorMessage; 
-    console.error(errorMessage); 
-    set({error: errorMessage})
-}
+    if (error.response?.data?.errors) {
+        validationErrors = error.response.data.errors;
+        errorMessage = error.response.data.detail;
+    } else if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+    } else if (error.message) {
+        errorMessage = error.message;
+    }
 
+    console.error(errorMessage);
+    set({error: errorMessage, validationErrors});
+};
+
+const createAsyncAction = (set, action) => {
+    return async (...args) => {
+        set({error: '', validationErrors: {}});
+        try {
+            await action(...args);
+        } catch (error) {
+            handleStoreError(set, error);
+        }
+    };
+};
 
 const useItemsStore = create(set => ({
     items: [],
     error: null,
+    validationErrors: {},
 
-    fetchItems: async () => {
-        try {
-            const response = await loggedInApi.get('items');
-            set({items: response.data})
-        } catch (error) {
-            handleStoreError(set, error, 'Failed to fetch items.'); 
-        }
-    },
+    fetchItems: createAsyncAction(set, async () => {
+        const response = await loggedInApi.get('items');
+        set({items: response.data});
+    }),
 
-    toggleItemFinished: async (itemId) => {
-        try {
-            await loggedInApi.put(`items/toggle-finish/${itemId}`);
-            set(state => ({
-                items: state.items.map(item => ({
-                    ...item,
-                    isFinished: item?.reDoItemEntityId === itemId ? !item.isFinished : item.isFinished
-                }))
-            }));
-        } catch (error) {
-            handleStoreError(set, error, 'Failed to toggle item.');
-        }
-    },
+    toggleItemFinished: createAsyncAction(set, async (itemId) => {
+        await loggedInApi.put(`items/toggle-finish/${itemId}`);
+        set(state => ({
+            items: state.items.map(item => ({
+                ...item,
+                isFinished: item?.reDoItemEntityId === itemId ? !item.isFinished : item.isFinished
+            }))
+        }));
+    }),
 
-    addItem: async (description) => {
-        try {
-            const newItem = await loggedInApi.post('items', {description: description});
-            set(state => ({items: [...state.items, newItem.data]}));
-        } catch (error) {
-            handleStoreError(set, error, 'Failed to add new item.');
-        }
-    },
+    addItem: createAsyncAction(set, async (description) => {
+        const newItem = await loggedInApi.post('items', {description});
+        set(state => ({items: [...state.items, newItem.data]}));
+    }),
 
-    removeItem: async (itemId) => {
-        try {
-            const response = await loggedInApi.delete(`items/${itemId}`);
-            set((state) => ({
-                items: state.items.filter(item => item.reDoItemEntityId !== itemId)
-            }));
-        } catch (error) {
-            handleStoreError(set, error, 'Failed to remove item.');
-        }
-    },
+    removeItem: createAsyncAction(set, async (itemId) => {
+        await loggedInApi.delete(`items/${itemId}`);
+        set(state => ({
+            items: state.items.filter(item => item?.reDoItemEntityId !== itemId)
+        }));
+    }),
 
-    removeLastItem: async () => {
-        try {
-            const response = await loggedInApi.delete(`items/last`);
-            set((state) => ({
-                items: state.items.slice(0, -1)
-            }));
-        } catch (error) {
-            handleStoreError(set, error, 'Failed to remove item.');
-        }
-    },
-    
-    removeAllItems: async () => {
-        try {
-            const response = await loggedInApi.delete(`items`);
-            set((state) => ({
-                items: []
-            }));
-        } catch (error) {
-            handleStoreError(set, error, 'Failed to remove items.');
-        }
-    },
+    removeLastItem: createAsyncAction(set, async () => {
+        await loggedInApi.delete(`items/last`);
+        set(state => ({
+            items: state.items.slice(0, -1)
+        }));
+    }),
 
-
+    removeAllItems: createAsyncAction(set, async () => {
+        await loggedInApi.delete('items');
+        set({items: []});
+    }),
 }));
 
 export default useItemsStore;
