@@ -33,13 +33,8 @@ const AddItemForm = () => {
                 </div>
 
             </form>
-
-
         </>
-
-
-    )
-        ;
+    );
 
 
 }

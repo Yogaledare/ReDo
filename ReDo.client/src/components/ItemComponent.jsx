@@ -8,7 +8,6 @@ export const ItemComponent = ({item: {reDoItemEntityId, isFinished, description}
     const removeItem = useItemsStore(state => state.removeItem);
 
     const handleToggle = async () => {
-        console.log("toggled")
         await toggleItemFinished(reDoItemEntityId);
     };
 

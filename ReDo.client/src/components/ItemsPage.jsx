@@ -2,6 +2,7 @@
 import useItemsStore from '../stores/useItemsStore';
 import {ItemComponent} from "./ItemComponent.jsx";
 import AddItemForm from "./AddItemForm.jsx";
+import ItemsControlPanel from "./ItemsControlPanel.jsx";
 
 const ItemsPage = () => {
     const {items, fetchItems, error} = useItemsStore();
@@ -31,6 +32,7 @@ const ItemsPage = () => {
                             ></ItemComponent>
                         ))}
                     </ol>
+                    <ItemsControlPanel></ItemsControlPanel>
                 </div>
             </div>
         </>

@@ -54,7 +54,29 @@ const useItemsStore = create(set => ({
         } catch (error) {
             handleStoreError(set, error, 'Failed to remove item.');
         }
-    }
+    },
+
+    removeLastItem: async () => {
+        try {
+            const response = await loggedInApi.delete(`items/last`);
+            set((state) => ({
+                items: state.items.slice(0, -1)
+            }));
+        } catch (error) {
+            handleStoreError(set, error, 'Failed to remove item.');
+        }
+    },
+    
+    removeAllItems: async () => {
+        try {
+            const response = await loggedInApi.delete(`items`);
+            set((state) => ({
+                items: []
+            }));
+        } catch (error) {
+            handleStoreError(set, error, 'Failed to remove items.');
+        }
+    },
 
 
 }));
